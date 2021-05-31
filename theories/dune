@@ -1,0 +1,5 @@
+(coq.theory
+ (name WildCat)
+ (package coq-hott-wildcat)
+ (synopsis "Experimental Wild Category theory library for HoTT library.")
+ (flags -noinit -indices-matter))

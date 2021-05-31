@@ -1,0 +1,16 @@
+opam-version: "2.0"
+maintainer: [ "Ali Caglayan <alizter@gmail.com>" ]
+build: [
+  [dune build]
+]
+install: [dune install]
+depends: [
+  "coq" {= "dev"}
+  "coq-hott" {= "dev"}
+]
+authors: ["Mike Shulman" "Ali Caglayan"]
+dev-repo: "git+https://github.com/alizter/AlgGeom.git"
+synopsis: "Experimental Wild Category library based on HoTT library."
+url {
+  src: "git+https://github.com/alizter/WildCat.git#main"
+}
