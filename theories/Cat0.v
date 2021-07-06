@@ -153,8 +153,8 @@ Arguments qiso_issect {n A _ _ a b} f {_}.
 Arguments qiso_isretr {n A _ _ a b} f {_}.
 Global Existing Instances isqiso_qiso_issect isqiso_qiso_isretr.
 
-Hint Extern 1 (@IsQIso ?n (Hom _ _ _) _ _ _ _ _) => change_dim n : typeclass_instances.
-Hint Extern 1 (@IsQIso ?n (Hom _ _ _) _ _ _ _ _) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (@IsQIso ?n (Hom _ _ _) _ _ _ _ _) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (@IsQIso ?n (Hom _ _ _) _ _ _ _ _) => change_dim_0 n : typeclass_instances.
 
 (** The inverse of a quasi-isomorphism is a quasi-isomorphism. *)
 Global Instance isqiso_inv `{IsCat0 n A}
@@ -232,15 +232,15 @@ CoInductive HasEquivs (n : nat) (A : Type) `{IsCat0 n A} :=
 Existing Class HasEquivs.
 Global Existing Instance hasequivs_hom.
 
-Hint Extern 1 (HasEquivs ?n (Hom _ _ _)) => change_dim n : typeclass_instances.
-Hint Extern 1 (HasEquivs ?n (Hom _ _ _)) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (HasEquivs ?n (Hom _ _ _)) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (HasEquivs ?n (Hom _ _ _)) => change_dim_0 n : typeclass_instances.
 
 (** A field can't be a working [Existing Class] due to a bug in Coq. *)
 Class CatIsEquiv `{HasEquivs n A} {a b : A} (f : a $-> b)
   := catie_catie : @CatIsEquiv' n A _ _ _ a b f.
 
-Hint Extern 1 (CatIsEquiv ?n (Hom _ _ _)) => change_dim n : typeclass_instances.
-Hint Extern 1 (CatIsEquiv ?n (Hom _ _ _)) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (CatIsEquiv ?n (Hom _ _ _)) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (CatIsEquiv ?n (Hom _ _ _)) => change_dim_0 n : typeclass_instances.
 
 Arguments CatIsEquiv : simpl never.
 
@@ -365,7 +365,7 @@ Existing Class IsConservative.
 Global Existing Instance catie_hom.
 
 (** [catie_conservative] can't be an [Instance] because it would go into infinite loops. *)
-Hint Immediate catie_conservative : typeclass_instances.
+#[export] Hint Immediate catie_conservative : typeclass_instances.
 
 (** The identity functor is conservative. *)
 CoFixpoint isconservative_idmap `{HasEquivs m A}
@@ -506,10 +506,10 @@ Notation "p ^D$" := (dgpd_inv p).
 Global Existing Instances
        isdcat0_dhom isdfunctor0_postcomp isdfunctor0_precomp.
 
-Hint Extern 1 (@IsDCat0 ?m (Hom _ _ _) _ _ _ _ _) => change_dim m : typeclass_instances.
-Hint Extern 1 (@IsDCat0 ?m (Hom _ _ _) _ _ _ _ _) => change_dim_0 m : typeclass_instances.
-Hint Extern 1 (@IsDCat0 _ _ ?n _ _ _ _) => change_dim n : typeclass_instances.
-Hint Extern 1 (@IsDCat0 _ _ ?n _ _ _ _) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (@IsDCat0 ?m (Hom _ _ _) _ _ _ _ _) => change_dim m : typeclass_instances.
+#[export] Hint Extern 1 (@IsDCat0 ?m (Hom _ _ _) _ _ _ _ _) => change_dim_0 m : typeclass_instances.
+#[export] Hint Extern 1 (@IsDCat0 _ _ ?n _ _ _ _) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (@IsDCat0 _ _ ?n _ _ _ _) => change_dim_0 n : typeclass_instances.
 
 Definition dcat_postcomp `{IsDCat0 m A n B}
            {a b c : A} (u : B a) {v : B b} {w : B c}
@@ -563,10 +563,10 @@ Arguments dqiso_issect {m A n B _ _ _ _ a b f _ u v} g {_}.
 Arguments dqiso_isretr {m A n B _ _ _ _ a b f _ u v} g {_}.
 Global Existing Instances isdqiso_issect isdqiso_isretr.
 
-Hint Extern 1 (@IsDQIso ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim m : typeclass_instances.
-Hint Extern 1 (@IsDQIso ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 m : typeclass_instances.
-Hint Extern 1 (@IsDQIso _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _) => change_dim n : typeclass_instances.
-Hint Extern 1 (@IsDQIso _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (@IsDQIso ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim m : typeclass_instances.
+#[export] Hint Extern 1 (@IsDQIso ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 m : typeclass_instances.
+#[export] Hint Extern 1 (@IsDQIso _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (@IsDQIso _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 n : typeclass_instances.
 
 Global Instance isdqiso_inv `{IsDCat0 m A n B}
        {a b : A} (f : a $-> b) `{!IsQIso f}
@@ -602,20 +602,20 @@ CoInductive DHasEquivs {m} {A} (n : nat) (B : A -> Type)
 Existing Class DHasEquivs.
 Global Existing Instance dhasequivs_dhom.
 
-Hint Extern 1 (@ DHasEquivs ?m (Hom _ _ _) _ _ _ _ _ _ _) => change_dim m : typeclass_instances.
-Hint Extern 1 (@ DHasEquivs ?m (Hom _ _ _) _ _ _ _ _ _ _) => change_dim_0 m : typeclass_instances.
-Hint Extern 1 (@ DHasEquivs _ _ ?n _ _ _ _ _ _) => change_dim n : typeclass_instances.
-Hint Extern 1 (@ DHasEquivs _ _ ?n _ _ _ _ _ _) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (@ DHasEquivs ?m (Hom _ _ _) _ _ _ _ _ _ _) => change_dim m : typeclass_instances.
+#[export] Hint Extern 1 (@ DHasEquivs ?m (Hom _ _ _) _ _ _ _ _ _ _) => change_dim_0 m : typeclass_instances.
+#[export] Hint Extern 1 (@ DHasEquivs _ _ ?n _ _ _ _ _ _) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (@ DHasEquivs _ _ ?n _ _ _ _ _ _) => change_dim_0 n : typeclass_instances.
 
 Class DCatIsEquiv `{DHasEquivs m A n B} {a b f fe u v} (g : DHom f u v)
   := dcatie_dcatie : @ DCatIsEquiv' m A n B _ _ _ _ _ _ a b f fe u v g.
 
 Arguments DCatIsEquiv : simpl never.
 
-Hint Extern 1 (@ DCatIsEquiv ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim m : typeclass_instances.
-Hint Extern 1 (@ DCatIsEquiv ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 m : typeclass_instances.
-Hint Extern 1 (@ DCatIsEquiv _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim n : typeclass_instances.
-Hint Extern 1 (@ DCatIsEquiv _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 n : typeclass_instances.
+#[export] Hint Extern 1 (@ DCatIsEquiv ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim m : typeclass_instances.
+#[export] Hint Extern 1 (@ DCatIsEquiv ?m (Hom _ _ _) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 m : typeclass_instances.
+#[export] Hint Extern 1 (@ DCatIsEquiv _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim n : typeclass_instances.
+#[export] Hint Extern 1 (@ DCatIsEquiv _ _ ?n _ _ _ _ _ _ _ _ _ _ _ _ _ _) => change_dim_0 n : typeclass_instances.
 
 Global Instance isdqiso_dcatie `{DHasEquivs m A n B}
        {a b f} {u : B a} {v : B b} (g : DHom f u v)
