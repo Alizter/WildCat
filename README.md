@@ -28,7 +28,7 @@ We want to consider:
  * Ease of use
  * Efficiency of typeclass search
  * Elaboration by coq
- * Flexivility of constructions
+ * Flexibility of constructions
  * Example: Definitionally involutive op
  * Having more cells, coinductive/globular appraoch or specified
  * Various levels of coherence
