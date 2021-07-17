@@ -1,6 +1,6 @@
 (* -*- mode: coq; mode: visual-line -*-  *)
 
-From HoTT Require Import Basics.
+From HoTT Require Import Basics Cubical.DPath.
 From WildCat Require Import Basics Cat1.
 
 Generalizable Variables A B.
@@ -43,7 +43,39 @@ Defined.
 
 Local Existing Instance iscat0_withpaths.
 
-(** TODO: Any dependent type should be a displayed 0-coherent oo-category with its tower of dependent identity types. *)
+(** Any dependent type is a displayed 0-coherent oo-category with its tower of dependent identity types. *)
+
+CoFixpoint isdglob_withpaths (A : Type) (P : A -> Type) : IsDGlob 0 P.
+Proof.
+  exists (@DPath A P); intros.
+  apply isdglob_withpaths.
+Defined.
+
+Local Existing Instance isdglob_withpaths.
+
+(** Any function is a 0-coherent oo-functor between types equipped with their globular tower of identity types.  As for [isglob_withpaths], we don't make this an [Instance]. *)
+CoFixpoint isdfunctor0_withpaths {A B : Type} {P : A -> Type} {Q : B -> Type}
+  (F : A -> B) (F' : forall x, P x -> Q (F x))
+  : IsDFunctor0 F F'.
+Proof.
+  construct.
+  { intros a b u v f p.
+    destruct f.
+    cbn in *.
+    exact (ap _ p). }
+  exact _.
+  (** The coinductive assumption is found by typeclass search. *)
+Defined.
+
+CoFixpoint isdcat0_withpaths (A : Type) (B : A -> Type) : IsDCat0 0 B.
+Proof.
+  construct.
+  - intros a b c x y z p q u v; exact (dp_concat v u).
+  - intros a u; exact dp_id.
+  - intros; cbn; apply isdfunctor0_withpaths.
+  - intros; cbn; apply isdfunctor0_withpaths.
+  - intros ? a b u v f ? p.
+Abort.
 
 (** Every path is a quasi-isomorphism. *)
 CoFixpoint isqiso_withpaths {A : Type} {a b : A} (p : a = b)
@@ -57,4 +89,51 @@ Proof.
   - apply isqiso_withpaths.
 Defined.
 
-(** TODO: 1-coherent functors, 1-coherent categories *)
+Local Existing Instance isqiso_withpaths.
+
+(** We can't use IsCat1_Default since we want to specify our notion of equivalence. Which in this case, happens to be a path. *)
+CoFixpoint hasequivs_withpaths {A : Type} : HasEquivs 0 A.
+Proof.
+  snrapply Build_HasEquivs.
+  1: exact (fun a b f => Unit).
+  1: hnf; trivial.
+  1: intros; exact _.
+  cbn; intros a b.
+  exact _.
+Defined.
+
+Local Existing Instance hasequivs_withpaths.
+
+Lemma cate_promote_withpaths {A : Type} (x y : A) : x $== y -> x $<~> y.
+Proof.
+  intros f.
+  snrapply (Build_CatEquiv f).
+  constructor.
+Defined.
+
+(** Any function is a 1-coherent oo-functor between types equipped with their globular tower of identity types. *)
+CoFixpoint isfunctor1_withpaths {A B : Type} (F : A -> B)
+  : IsFunctor1 F.
+Proof.
+  srapply Build_IsFunctor1.
+  1,2: hnf; intros; rapply cate_promote_withpaths.
+  1: reflexivity.
+  rapply ap_pp.
+Defined.
+
+Local Existing Instance isfunctor1_withpaths.
+
+(** 1-coherent functors, 1-coherent categories *)
+CoFixpoint iscat1_withpaths {A : Type} : IsCat1 0 A.
+Proof.
+  snrapply Build_IsCat1.
+  1-5: hnf; intros; rapply cate_promote_withpaths.
+  1: exact (concat_p_pp _ _ _).
+  1: exact (concat_p1 _).
+  1: exact (concat_1p _).
+  1: exact (concat_pV _).
+  1: exact (concat_Vp _).
+  1,2: exact _.
+  cbn; intros.
+  apply iscat1_withpaths.
+Defined.

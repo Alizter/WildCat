@@ -7,6 +7,8 @@ Local Open Scope nat_scope.
 
 (** * Basics *)
 
+Ltac construct := unshelve econstructor.
+
 Notation "n .-1" := (pred n) : nat_scope.
 
 (** ** Coinductive streams *)

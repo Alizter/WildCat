@@ -108,7 +108,81 @@ Defined.
 
 Global Existing Instance hasequivs_forall.
 
-(** TODO: 1-coherent functors and categories *)
+Lemma Build_CatEquiv_forall {n A} (B : A -> Type)
+  {bg : forall a, IsGlob n (B a)}
+  {bc : forall a, IsCat0 n (B a)}
+  {bh : forall a, HasEquivs n (B a)}
+  : forall (f g : forall x, B x), (forall x, f x $<~> g x) -> f $<~> g.
+Proof.
+  intros f g e.
+  snrapply Build_CatEquiv.
+  { cbn; intros x.
+    exact (e x). }
+  unfold CatIsEquiv.
+  unfold hasequivs_forall.
+  cbn; intros a. (** intros and cbn struggling to work here without help. *)
+  rapply catie_cate.
+Defined.
+
+(** Postcomposing and precomposing between [forall] types preserves 1-coherent oo-functors.  (TODO: Should probably be generalized to sections.) *)
+CoFixpoint isfunctor1_postcompose {m n A} (B C : A -> Type)
+  `{forall a, IsGlob m (B a), forall a, IsGlob n (C a)}
+  `{!forall a, IsCat0 m (B a), !forall a, IsCat0 n (C a)}
+  `{!forall a, HasEquivs m (B a), !forall a, HasEquivs n (C a)}
+   (F : forall a, B a -> C a)
+   `{!forall a, IsFunctor0 (F a), !forall a, IsFunctor1 (F a)}
+  : IsFunctor1 (fun f a => F a (f a)).
+Proof.
+  snrapply Build_IsFunctor1.
+  1: intros a.
+  2: intros a b c f g.
+  1,2: snrapply Build_CatEquiv_forall; intros x.
+  1: exact (fmap_id _ (a x)).
+  1: exact (fmap_comp _ (f x) (g x)).
+  intros a b.
+  rapply isfunctor1_postcompose.
+Defined.
+
+CoFixpoint isfunctor1_precompose {n A B} (h : A -> B) (C : B -> Type)
+  `{forall a, IsGlob n (C a), !forall a, IsCat0 n (C a),
+    !forall a, HasEquivs n (C a), !forall a, IsCat1 n (C a)}
+  : IsFunctor1 (fun f a => f (h a)).
+Proof.
+  snrapply Build_IsFunctor1.
+  1: intros a.
+  2: intros a b c f g.
+  1,2: snrapply Build_CatEquiv_forall; intros x.
+  1: exact (fmap_id _ (a (h x))).
+  1: exact (fmap_comp _ _ _).
+  intros a b.
+  rapply isfunctor1_precompose.
+Defined.
+
+Global Existing Instances isfunctor1_postcompose isfunctor1_precompose.
+
+(** 1-coherent functors and categories *)
+CoFixpoint is1cat_forall {n A} (B : A -> Type)
+  {H1 : forall a, IsGlob n (B a)}
+  {H2 : forall a, IsCat0 n (B a)}
+  {H3 : forall a, HasEquivs n (B a)}
+  {H4 : forall a, IsCat1 n (B a)}
+  : IsCat1 n (forall a, B a).
+Proof.
+  constructor.
+  1: intros a b c d f g h.
+  2,3: intros a b f.
+  4,5: intros isz a b f. 
+  1-5: snrapply Build_CatEquiv_forall; intros x.
+  - rapply cat_assoc.
+  - rapply cat_idl.
+  - rapply cat_idr.
+  - rapply gpd_issect.
+  - rapply gpd_isretr.
+  - intros a b c g; rapply isfunctor1_postcompose.
+  - intros a b c f; rapply isfunctor1_postcompose.
+  - intros a b; simpl.
+    rapply is1cat_forall.
+Defined.
 
 (** ** Displayed forall (oo,n)-categories *)
 

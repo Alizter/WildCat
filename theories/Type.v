@@ -31,3 +31,11 @@ Proof.
 Defined.
 
 Global Existing Instances iscat0_type.
+
+Global Instance iscat1_default_type : IsCat1_Default 1 Type.
+Proof.
+  constructor.
+  constructor.
+  - intros A B C D f g h.
+    (** This doesn't seem to be the correct notion of equivalence. *)  
+Admitted.
